@@ -68,6 +68,8 @@ def getScreenCoords(camX, camY, cap, screen):
 
 if __name__ == "__main__":
     toggleMouse = False
+    spaceCooldown = 0
+    sCooldown = 0
 
     cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     #https://www.youtube.com/watch?v=gJgXsaj_gR0&list=PLGmxyVGSCDKvmLInHxJ9VdiwEb82Lxd2E&index=10
@@ -79,7 +81,7 @@ if __name__ == "__main__":
     while (cap.isOpened()):
 
         #quit is q
-        if keyboard.is_pressed("q"):
+        if keyboard.is_pressed("p"):
             break
         
         x, y = greenDetection(cap)
@@ -87,9 +89,17 @@ if __name__ == "__main__":
             lastX, lastY = x, y
 
         #toggle mouse following green with space key
-        if keyboard.is_pressed(" "):
+        if keyboard.is_pressed(" ") and spaceCooldown == 0:
             print("space pressed!")
             toggleMouse = not toggleMouse
+            spaceCooldown = 20
+
+        if keyboard.is_pressed("m") and sCooldown == 0:
+            pyautogui.click(pyautogui.position())
+            sCooldown = 20
+
+        spaceCooldown = max(0, spaceCooldown - 1)
+        sCooldown = max(0, sCooldown - 1)
 
         if toggleMouse:
             screen = pyautogui.size()
